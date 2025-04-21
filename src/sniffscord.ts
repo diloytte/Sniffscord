@@ -25,6 +25,24 @@
         return;
     }
 
+    const sendToServer = (sender: string, message: string) => {
+        fetch("http://localhost:7898/message", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ sender, message }),
+        })
+          .then((res) => {
+            if (!res.ok) throw new Error("Failed to send message");
+            console.log("[📡] Message sent to server.");
+          })
+          .catch((err) => {
+            console.warn("[❌] Failed to send to server:", err);
+          });
+      }
+      
+
     const findMessageContainer = (): HTMLElement | null => {
         const sampleMessage = document.querySelector<HTMLElement>('li[id^="chat-messages"]');
         return sampleMessage?.parentElement || null;
@@ -71,7 +89,9 @@
                         continue;
                     }
 
+                    sendToServer(username, text);
                     log(`🎯 ${username}: ${text}`);
+
                 }
             }
         });
