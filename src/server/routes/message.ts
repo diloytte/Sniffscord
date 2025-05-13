@@ -1,18 +1,16 @@
 import { Request, Response } from "express";
 
-interface MessageRequest {
-  sender: string;
-  message: string;
-}
-
 export function handleIncomingMessage(req: Request, res: Response): void {
-  const { sender, message } = req.body as MessageRequest;
+  const { username, messageContent, rawHtml } = req.body;
 
-  if (!sender || !message) {
-    res.status(400).json({ error: "Missing sender or message" });
-    return;
+  if (!username || !messageContent || !rawHtml) {
+    //@ts-ignore
+    return res.status(400).json({ error: "Missing username, messageContent, or rawHtml" });
   }
 
-  console.log(`[📬] Received from ${sender}: ${message}`);
+  if(username.toLowerCase().includes("daumen")){
+    console.log(messageContent);
+  }
+
   res.status(200).json({ status: "ok" });
 }
